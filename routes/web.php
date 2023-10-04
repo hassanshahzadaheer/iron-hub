@@ -22,6 +22,16 @@ Auth::routes();
 
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
+
+// Routes for admin
 Route::group(['middleware' => 'admin'], function () {
     Route::get('/home', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 });
+
+// Routes for staff
+Route::group(['middleware' => 'staff'], function () {
+    Route::get('/home', [StaffController::class, 'dashboard'])->name('staff.dashboard');
+});
+
+// Routes for members (default)
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

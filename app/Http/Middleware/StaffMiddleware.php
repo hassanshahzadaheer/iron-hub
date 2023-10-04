@@ -16,7 +16,7 @@ class StaffMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-if (auth()->user() && auth()->user()->role === 'member') {
+if (auth()->user() && auth()->user()->role === 'staff') {
     return $next($request);
 }
 
