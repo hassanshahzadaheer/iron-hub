@@ -1,10 +1,10 @@
-@extends('admin_layouts.admin_layout')
+@extends('layouts.app')
 
 @section('content')
 <div class="container-fluid">
     <div class="row">
         <!-- Left Navigation Bar -->
-        @include('admin_layouts.admin_partials.admin_nav')
+          @include('admin_layouts.admin_nav')
 
         <!-- Main Content -->
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">

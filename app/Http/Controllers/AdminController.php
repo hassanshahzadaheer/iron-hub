@@ -26,8 +26,5 @@ class AdminController extends Controller
         }
     }
 
-    public function membersIndex()
-    {
-        dd("Load the class");
-    }
+
 }

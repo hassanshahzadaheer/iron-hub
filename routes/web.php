@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
-
+use App\Http\Controllers\MemberController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -26,7 +26,10 @@ Auth::routes();
 // Dashboard route for all authenticated users
 Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
 
-Route::get('/admin/members', [AdminController::class, 'membersIndex'])->name('admin.members.index');
+
+
+Route::resource('admin/members', MemberController::class);
+
 
 
 // Route::middleware(['admin'])->group(function () {
