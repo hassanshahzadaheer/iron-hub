@@ -14,17 +14,13 @@ class AdminController extends Controller
         // Get the authenticated admin's name
         $adminName = Auth::user()->name;
 
-        return view('admin.dashboard', compact('adminName'));
-
         // Check the user's role
         if (auth()->user()->role === 'admin') {
-            return view('admin.dashboard');
+            return view('admin.dashboard', compact('adminName'));
         } elseif (auth()->user()->role === 'staff') {
             return view('staff.dashboard');
         } else {
             return view('home');
         }
     }
-
-
 }

@@ -1,4 +1,4 @@
-@include('admin_layouts.admin_nav')
+
 <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-light sidebar">
             <div class="position-sticky">
                 <ul class="nav flex-column">

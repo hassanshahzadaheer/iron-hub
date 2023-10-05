@@ -19,7 +19,7 @@ class MemberController extends Controller
     }
     public function store(Request $request)
     {
-        dd("I'm in store function");
+
         // Validate the form data (add validation rules as needed)
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
@@ -27,11 +27,13 @@ class MemberController extends Controller
             // Add validation rules for other member fields
         ]);
 
-        // Create a new member with the validated data
+
+       // Create a new member with the validated data
         $member = new User();
         $member->name = $validatedData['name'];
         $member->email = $validatedData['email'];
-        // Set other member attributes here
+        $member->password = bcrypt('password');
+        $member->role = 'member';
         $member->save();
 
         // Redirect to the member listing page or a success page

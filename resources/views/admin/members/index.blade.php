@@ -1,8 +1,16 @@
-@extends('layouts.app')
+@extends('admin_layouts.admin_layout')
 
-@section('content')
+@section('admin-content')
 <div class="container">
-    <h2>Members List</h2>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Members List</h2>
+        <a href="{{ route('members.create') }}" class="btn btn-primary">Create Member</a>
+    </div>
+@if (session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
 
     <table class="table">
         <thead>

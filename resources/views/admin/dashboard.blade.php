@@ -14,10 +14,9 @@
             <div class="card">
                 <div class="card-body">
                     <h1>Welcome, {{ $adminName }}!</h1>
-                    {{-- Add admin-specific content here --}}
                 </div>
             </div>
-            @yield('admin-content') {{-- This is where specific page content will be inserted --}}
+            @yield('admin-content')
         </main>
     </div>
 </div>
