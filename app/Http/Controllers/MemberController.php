@@ -9,8 +9,7 @@ class MemberController extends Controller
 {
     public function index()
     {
-        $members = User::where('role', 'member')->get(); // Assuming 'members' are users with 'member' role
-
+        $members = User::where('role', 'member')->get();
         return view('admin.members.index', ['members' => $members]);
     }
     public function create()
@@ -19,16 +18,13 @@ class MemberController extends Controller
     }
     public function store(Request $request)
     {
-
         // Validate the form data (add validation rules as needed)
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
-            // Add validation rules for other member fields
         ]);
 
-
-       // Create a new member with the validated data
+        // Create a new member with the validated data
         $member = new User();
         $member->name = $validatedData['name'];
         $member->email = $validatedData['email'];
@@ -38,5 +34,41 @@ class MemberController extends Controller
 
         // Redirect to the member listing page or a success page
         return redirect()->route('members.index')->with('success', 'Member created successfully');
+    }
+
+    public function edit($id)
+    {
+        $member = User::findOrFail($id); // Find the member by ID
+        return view('admin.members.edit', compact('member'));
+    }
+    public function update(Request $request, $id)
+    {
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $id,
+        ]);
+        // Find the member by ID
+        $member = User::findOrFail($id);
+
+        // Update the member's attributes with the validated data
+        $member->name = $validatedData['name'];
+        $member->email = $validatedData['email'];
+        $member->save();
+
+        // Redirect to the member listing page or a success page
+        return redirect()->route('members.index')->with('success', 'Member updated successfully');
+    }
+
+    public function destroy($id)
+    {
+
+        // Find the member by ID
+        $member = User::findOrFail($id);
+
+        // Delete the member
+        $member->delete();
+
+        // Redirect to the member listing page or a success page
+        return redirect()->route('members.index')->with('success', 'Member deleted successfully');
     }
 }
