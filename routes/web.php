@@ -23,10 +23,15 @@ Auth::routes();
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 
-// Routes for admin
-Route::group(['middleware' => 'admin'], function () {
-    Route::get('/home', [AdminController::class, 'dashboard'])->name('admin.dashboard');
-});
+// Dashboard route for all authenticated users
+Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+
+Route::get('/admin/members', [AdminController::class, 'membersIndex'])->name('admin.members.index');
+
+
+// Route::middleware(['admin'])->group(function () {
+//     Route::get('/home', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+// });
 
 // Routes for staff
 Route::group(['middleware' => 'staff'], function () {

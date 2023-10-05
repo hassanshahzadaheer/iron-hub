@@ -13,16 +13,12 @@
                         </div>
                     @endif
 
-                    @if (auth()->user()->role === 'admin')
-                        {{-- Display admin-specific content --}}
-                        <h1>Welcome, Admin!</h1>
-                        {{-- Add admin-specific content here --}}
-                    @elseif (auth()->user()->role === 'staff')
+                    @if (auth()->user()->role === 'staff')
                         {{-- Display staff-specific content --}}
                         <h1>Welcome, Staff!</h1>
                         {{-- Add staff-specific content here --}}
                     @else
-                        {{-- Default content for members --}}
+                        {{-- Default content for members and admin --}}
                         {{ __('You are logged in!') }}
                     @endif
                 </div>
