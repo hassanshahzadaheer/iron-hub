@@ -123,15 +123,22 @@
             </div>
         </div>
 
-        <div class="form-group">
-            <label for="profile_picture">Profile Picture:</label>
-            <input type="file" name="profile_picture" id="profile_picture" class="form-control-file">
-            @error('profile_picture')
-                <span class="text-danger">{{ $message }}</span>
-            @enderror
-        </div>
+        <div class="col-md-6">
+                <div class="form-group">
+                    <label for="profile_picture">Profile Picture:</label>
+                    <div class="custom-file">
+                        <input type="file" name="profile_picture" id="profile_picture" class="custom-file-input" onchange="readURL(this);">
+                        <label class="custom-file-label" for="profile_picture">Choose file</label>
+                    </div>
+                    <div class="mt-2">
+                        <img id="image-preview" src="#" alt="Preview" style="max-width: 100%; max-height: 200px; display: none;">
+                    </div>
+                    @error('profile_picture')
+                        <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
 
-        <!-- Add more fields as needed for member details -->
 
         <button type="submit" class="btn btn-primary">Create Member</button>
     </form>
