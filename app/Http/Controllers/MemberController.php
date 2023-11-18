@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Member;
+use Exception;
 use Illuminate\Http\Request;
 
 class MemberController extends Controller
@@ -18,24 +20,58 @@ class MemberController extends Controller
     }
     public function store(Request $request)
     {
-        // Validate the form data (add validation rules as needed)
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users',
-        ]);
 
-        // Create a new member with the validated data
-        $member = new User();
-        $member->name = $validatedData['name'];
-        $member->email = $validatedData['email'];
-        $member->password = bcrypt('password');
-        $member->role = 'member';
-        $member->save();
+        try {
+            // Validate the form data
 
-        // Redirect to the member listing page or a success page
-        return redirect()->route('members.index')->with('success', 'Member created successfully');
-    }
+            $validatedData = $request->validate([
+                'first_name' => 'required|max:255',
+                 'last_name' => 'required|max:255',
+                'email' => 'required|email|unique:users',
+                'phone_number' => 'required|string|max:20',
+            // 'street_address' => 'required|string|max:255',
+            // 'city' => 'required|string|max:255',
+            'dob' => 'required|date',
+            'gender' => 'required|in:male,female,other',
+            'profile_picture' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            ]);
 
+            // Create a new user
+            $user = new User();
+            $user->name = $validatedData['first_name'] . ' ' . $validatedData['last_name'];
+            $user->email = $validatedData['email'];
+            $user->password = bcrypt('password');
+            $user->role = 'member';
+            $user->save();
+
+            // Create a new member associated with the user
+            $member = new Member();
+            $member->user_id = $user->id;
+           $member->fill($validatedData + ['last_name' => $validatedData['last_name'] ?? null]);
+            $member->save();
+
+            // Handle file upload for profile picture
+            if ($request->hasFile('profile_picture')) {
+                $member->profile_picture = $request->file('profile_picture')->store('profile_pictures', 'public');
+                $member->save();
+            }
+
+            // Debugging information
+            \Log::info('Member created successfully.', ['user_id' => $member->user_id]);
+
+            // Redirect to the member listing page with success message
+            return redirect()->route('members.index')->with('success', 'Member created successfully');
+        } catch (\Exception $e) {
+
+\Log::error('Error creating member.', ['error' => $e->getMessage()]);
+
+
+// Redirect back with an error message
+return redirect()->back()->withInput()->with('error', 'Error creating member. Please try again.');
+
+
+        }
+}
     public function edit($id)
     {
         $member = User::findOrFail($id); // Find the member by ID
