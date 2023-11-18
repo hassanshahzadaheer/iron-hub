@@ -12,12 +12,18 @@
         </div>
     @endif
 
+    @if (session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
+
     <table class="table">
         <thead>
             <tr>
                 <th>Name</th>
                 <th>Email</th>
-                <th>Action</th> <!-- Add a new column for actions -->
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>

@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use App\Models\User;
 use App\Models\Member;
-use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class MemberController extends Controller
 {
@@ -72,28 +73,62 @@ return redirect()->back()->withInput()->with('error', 'Error creating member. Pl
 
         }
 }
-    public function edit($id)
-    {
-        $member = User::findOrFail($id); // Find the member by ID
+ public function edit($id)
+{
+    try {
+        $user = User::findOrFail($id); // Find the user by ID
+        $member = $user->member; // Get the associated member
+
+        // Check if the user has an associated member
+        if (!$member) {
+            // Flash an error message and redirect back or wherever is appropriate
+            return redirect()->back()->with('error', 'Member not found for the specified user.');
+        }
+
         return view('admin.members.edit', compact('member'));
+    } catch (ModelNotFoundException $e) {
+        // Flash an error message and redirect back or wherever is appropriate
+        return redirect()->back()->with('error', 'User not found with the specified ID.' . $e->getMessage());
     }
-    public function update(Request $request, $id)
-    {
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $id,
-        ]);
-        // Find the member by ID
-        $member = User::findOrFail($id);
+}
+   public function update(Request $request, $id)
+{
 
-        // Update the member's attributes with the validated data
-        $member->name = $validatedData['name'];
-        $member->email = $validatedData['email'];
-        $member->save();
+    // Validate the form data
+    $validatedData = $request->validate([
+        'first_name' => 'required|max:255',
+        'last_name' => 'required|max:255',
+        'email' => 'required|email|unique:users,email,' . $id,
+        'phone_number' => 'required|string|max:20',
+        'dob' => 'required|date',
+        'gender' => 'required|in:male,female,other',
+        'profile_picture' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+    ]);
 
-        // Redirect to the member listing page or a success page
-        return redirect()->route('members.index')->with('success', 'Member updated successfully');
+    // Find the member by ID with the 'user' relationship eager loaded
+    $member = Member::with('user')->findOrFail($id);
+
+    // Update the user associated with the member
+    $user = $member->user;
+    $user->name = $validatedData['first_name'] . ' ' . $validatedData['last_name'];
+    $user->email = $validatedData['email'];
+    $user->save();
+
+    // Update the member's attributes with the validated data
+    $member->fill($validatedData);
+
+    // Handle file upload for profile picture
+    if ($request->hasFile('profile_picture')) {
+        $member->profile_picture = $request->file('profile_picture')->store('profile_pictures', 'public');
     }
+
+    // Save the changes
+    $member->save();
+
+    // Redirect to the member listing page with success message
+    return redirect()->route('members.index')->with('success', 'Member updated successfully');
+}
+
 
     public function destroy($id)
     {
