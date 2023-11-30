@@ -10,19 +10,31 @@
 
     <title>{{ config('app.name', 'Iron Hub') }}</title>
 
-    <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
-    <link rel="stylesheet" href="{{ asset('assets/css/styles.min.css') }}" />
-    <!--  Bootstrap Icons -->
-    <link href="{{ asset('css/bootstrap-icons.css') }}" rel="stylesheet">
 
+    <link rel="shortcut icon" type="image/png" href="{{ asset('assets/images/logos/favicon.png') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/css/styles.min.css') }}" />
 
 </head>
 
 <body>
-    <div id="app">
-    <nav class="navbar navbar-expand-lg navbar-light">
- <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
+    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+        data-sidebar-position="fixed" data-header-position="fixed">
+        <aside class="left-sidebar">
+            <div>
+                <div class="brand-logo d-flex align-items-center justify-content-between">
+                    <a href="{{ route('dashboard') }}" class="text-nowrap logo-img">
+                        <img src="{{ asset('images/gym-logo.png') }}" width="180" alt="" />
+                    </a>
+                    <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
+                        <i class="ti ti-x fs-8"></i>
+                    </div>
+                </div>
+            </div>
+        </aside>
+        <div class="body-wrapper">
+            <header class="app-header">
+                <nav class="navbar navbar-expand-lg navbar-light">
+                     <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
         <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
             @guest
                 @if (Route::has('login'))
@@ -63,25 +75,68 @@
             @endguest
         </ul>
     </div>
-</nav>
-
-
-        <main class="py-4">
-            @yield('content')
-        </main>
+                </nav>
+            </header>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-8 d-flex align-items-strech">
+                        <div class="card w-100">
+                            <div class="card-body">
+                                <div class="d-sm-flex d-block align-items-center justify-content-between mb-9">
+                                    <div class="mb-3 mb-sm-0">
+                                        <h5 class="card-title fw-semibold">Sales Overview</h5>
+                                    </div>
+                                    <div>
+                                        <select class="form-select">
+                                            <option value="1">March 2023</option>
+                                            <option value="2">April 2023</option>
+                                            <option value="3">May 2023</option>
+                                            <option value="4">June 2023</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div id="chart"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <!-- Yearly Breakup -->
+                                <div class="card overflow-hidden">
+                                    <div class="card-body p-4">
+                                        <h5 class="card-title mb-9 fw-semibold">Yearly Breakup</h5>
+                                        <!-- Add your Yearly Breakup content here -->
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <!-- Monthly Earnings -->
+                                <div class="card">
+                                    <div class="card-body">
+                                        <!-- Add your Monthly Earnings content here -->
+                                    </div>
+                                    <div id="earning"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="py-6 px-6 text-center">
+                    <p class="mb-0 fs-4">Design and Developed by <a href="https://aheer.me/" target="_blank"
+                            class="pe-1 text-primary text-decoration-underline">Mr Aheer</a></p>
+                </div>
+            </div>
+        </div>
     </div>
+    <script src="{{ asset('assets/libs/jquery/dist/jquery.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('assets/js/sidebarmenu.js') }}"></script>
+    <script src="{{ asset('assets/js/app.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/apexcharts/dist/apexcharts.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/simplebar/dist/simplebar.js') }}"></script>
+    <script src="{{ asset('assets/js/dashboard.js') }}"></script>
+
 </body>
 
 </html>
-
-<!-- script files -->
-
-
-<script src="{{ asset('js/app.js') }}"></script>
-<script src="{{ asset('assets/libs/jquery/dist/jquery.min.js') }}"></script>
-<script src="{{ asset('assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
-<script src="{{ asset('assets/js/sidebarmenu.js') }}"></script>
-<script src="{{ asset('assets/js/app.min.js') }}"></script>
-<script src="{{ asset('assets/libs/apexcharts/dist/apexcharts.min.js') }}"></script>
-<script src="{{ asset('assets/libs/simplebar/dist/simplebar.js') }}"></script>
-<script src="{{ asset('assets/js/dashboard.js') }}"></script>

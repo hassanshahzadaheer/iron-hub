@@ -12,7 +12,6 @@
                             Members
                         </a>
                     </li>
-                    <!-- Add more navigation links for other admin functionalities -->
                 </ul>
             </div>
         </nav>

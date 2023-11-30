@@ -1,7 +1,7 @@
 @extends('admin_layouts.admin_layout')
 
 @section('admin-content')
-<div class="container">
+ <div class="card">
     <h2>Create New Member</h2>
 
     <form action="{{ route('members.store') }}" method="POST" enctype="multipart/form-data" id="member-form">
