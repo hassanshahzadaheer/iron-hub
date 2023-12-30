@@ -3,7 +3,7 @@
 @section('admin-content')
 <div class="container">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>Members List</h2>
+        <h3 class="card-title fw-semibold mb-4">Create New Member</h3>
         <a href="{{ route('members.create') }}" class="btn btn-primary">Create Member</a>
     </div>
     @if (session('success'))

@@ -18,10 +18,12 @@ class MemberController extends Controller
         $members = User::where('role', 'member')->get();
         return view('admin.members.index', ['members' => $members]);
     }
+
     public function create()
     {
         return view('admin.members.create');
     }
+
     public function store(Request $request)
     {
 
@@ -30,22 +32,22 @@ class MemberController extends Controller
             \Log::info('Incoming request data:', ['data' => $request->all()]);
 
 
-$base64ImageRule = [
-            'required',
-            function ($attribute, $value, $fail) {
-                $data = explode(',', $value);
+            $base64ImageRule = [
+                'required',
+                function ($attribute, $value, $fail) {
+                    $data = explode(',', $value);
 
-                if (count($data) !== 2 || !preg_match('/^data:image\/(\w+);base64/', $data[0])) {
-                    $fail($attribute . ' is not a valid base64-encoded image.');
-                }
+                    if (count($data) !== 2 || !preg_match('/^data:image\/(\w+);base64/', $data[0])) {
+                        $fail($attribute.' is not a valid base64-encoded image.');
+                    }
 
-                $imageData = base64_decode($data[1]);
+                    $imageData = base64_decode($data[1]);
 
-                if ($imageData === false || !getimagesizefromstring($imageData)) {
-                    $fail($attribute . ' is not a valid base64-encoded image.');
-                }
-            },
-        ];
+                    if ($imageData === false || !getimagesizefromstring($imageData)) {
+                        $fail($attribute.' is not a valid base64-encoded image.');
+                    }
+                },
+            ];
 
 
             // Validate the form data
@@ -54,17 +56,14 @@ $base64ImageRule = [
                 'last_name' => 'required|max:255',
                 'email' => 'required|email|unique:users',
                 'phone_number' => 'required|string|max:20',
-                // 'street_address' => 'required|string|max:255',
-                // 'city' => 'required|string|max:255',
-                // 'dob' => 'required|date',
                 'gender' => 'required|in:male,female,other',
-              'captured_image' => ['required', $base64ImageRule],
+                'captured_image' => ['required', $base64ImageRule],
             ]);
-\Log::info('Validated data:', ['data' => $validatedData]);
+            \Log::info('Validated data:', ['data' => $validatedData]);
 
             // Create a new user
             $user = new User();
-            $user->name = $validatedData['first_name'] . ' ' . $validatedData['last_name'];
+            $user->name = $validatedData['first_name'].' '.$validatedData['last_name'];
             $user->email = $validatedData['email'];
             $user->password = bcrypt('password');
             $user->role = 'member';
@@ -78,36 +77,35 @@ $base64ImageRule = [
 
 
 // Handle base64-encoded image
-if ($request->has('captured_image')) {
-    $base64Image = $validatedData['captured_image'];
-    $imageData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $base64Image));
+            if ($request->has('captured_image')) {
+                $base64Image = $validatedData['captured_image'];
+                $imageData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $base64Image));
 
-    // Save the image to storage
-    $imageName = 'captured_image_' . time() . '.png'; // You can use a different extension if needed
-    Storage::disk('public')->put('profile_pictures/' . $imageName, $imageData);
+                // Save the image to storage
+                $imageName = 'captured_image_'.time().'.png'; // You can use a different extension if needed
+                Storage::disk('public')->put('profile_pictures/'.$imageName, $imageData);
 
-    // Update the member's profile picture field
-    $member->profile_picture = 'profile_pictures/' . $imageName;
-    $member->save();
-}
-
-
+                // Update the member's profile picture field
+                $member->profile_picture = 'profile_pictures/'.$imageName;
+                $member->save();
+            }
 
             // Redirect to the member listing page with success message
             // return redirect()->route('members.index')->with('success', 'Member created successfully');
 
-return response()->json(['message' => 'Member created successfully']);
+            return response()->json(['message' => 'Member created successfully']);
 
         } catch (\Exception $e) {
             // Redirect back with an error message
 
-\Log::error('Error creating member: ' . $e->getMessage());
-return response()->json(['error' => 'Error creating member. Please try again.'], 500);
+            \Log::error('Error creating member: '.$e->getMessage());
+            return response()->json(['error' => 'Error creating member. Please try again.'], 500);
 
 
             // return redirect()->back()->withInput()->with('error', 'Error creating member. Please try again.');
         }
     }
+
     public function edit($id)
     {
         try {
@@ -123,9 +121,10 @@ return response()->json(['error' => 'Error creating member. Please try again.'],
             return view('admin.members.edit', compact('member'));
         } catch (ModelNotFoundException $e) {
             // Flash an error message and redirect back or wherever is appropriate
-            return redirect()->back()->with('error', 'User not found with the specified ID.' . $e->getMessage());
+            return redirect()->back()->with('error', 'User not found with the specified ID.'.$e->getMessage());
         }
     }
+
     public function update(Request $request, $id)
     {
 
@@ -133,7 +132,7 @@ return response()->json(['error' => 'Error creating member. Please try again.'],
         $validatedData = $request->validate([
             'first_name' => 'required|max:255',
             'last_name' => 'required|max:255',
-            'email' => 'required|email|unique:users,email,' . $id,
+            'email' => 'required|email|unique:users,email,'.$id,
             'phone_number' => 'required|string|max:20',
             'dob' => 'required|date',
             'gender' => 'required|in:male,female,other',
@@ -145,7 +144,7 @@ return response()->json(['error' => 'Error creating member. Please try again.'],
 
         // Update the user associated with the member
         $user = $member->user;
-        $user->name = $validatedData['first_name'] . ' ' . $validatedData['last_name'];
+        $user->name = $validatedData['first_name'].' '.$validatedData['last_name'];
         $user->email = $validatedData['email'];
         $user->save();
 

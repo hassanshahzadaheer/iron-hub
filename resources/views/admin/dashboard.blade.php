@@ -1,8 +1,7 @@
 @extends('admin_layouts.admin_layout')
 
 @section('admin-content')
-
-   <div class="row">
+    <div class="row">
           <div class="col-lg-8 d-flex align-items-strech">
             <div class="card w-100">
               <div class="card-body">

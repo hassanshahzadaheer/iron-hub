@@ -1,9 +1,9 @@
 @extends('admin_layouts.admin_layout')
 
 @section('admin-content')
- <div class="card">
-    <h2>Create New Member</h2>
+    <h3 class="card-title fw-semibold mb-4">Create New Member</h3>
 
+         <div class="card-body">
     <form action="{{ route('members.store') }}" method="POST" enctype="multipart/form-data" id="member-form">
         @csrf
         <div class="row">
@@ -148,7 +148,8 @@
 
         <button type="submit" class="btn btn-primary">Create Member</button>
     </form>
-</div>
+         </div>
+
 
 @if ($errors->any())
 <div class="alert alert-danger">
@@ -241,7 +242,13 @@
                 },
                 body: formData
             })
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        showErrorAlert(`HTTP error! Status: ${response.status}`);
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
                 .then(data => {
                     console.log('AJAX request successful:', data);
                     showSuccessAlert('Member created successfully!', function () {
@@ -251,11 +258,27 @@
                 })
                 .catch(error => {
                     console.error('Error submitting form:', error);
-                    showErrorAlert('Error submitting form. Please try again.');
-                });
-        });
 
-        // Client-side validation function
+                    // Check if the error has a response and if it's in JSON format
+                    if (error instanceof Error && error.response && error.response.json) {
+                        error.response.json()
+                            .then(data => {
+                                console.log('Server response:', data);
+
+                                // Use the actual error message from the server response
+                                showErrorAlert(data.error || 'Error submitting form. Please try again.');
+                            })
+                            .catch(innerError => {
+                                console.error('Error parsing JSON response:', innerError);
+                                showErrorAlert('Error submitting form. Please try again.');
+                            });
+                    } else {
+                        showErrorAlert('Error submitting form. Please try again.');
+                    }
+                });
+
+
+            // Client-side validation function
         function validateForm() {
             // You can add additional validation logic here
             return true;
